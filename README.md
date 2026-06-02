@@ -1,4 +1,4 @@
-# 📌 Striver's SDE Sheet Challenge
+<img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/3a3b4dfb-6b53-409b-b6cb-f6f1af1582eb" /># 📌 Striver's SDE Sheet Challenge
 
 Solving Striver's SDE Sheet one day at a time.  
 Tracking progress, approach, and key learnings for each problem.
@@ -32,6 +32,9 @@ Each file has the problem approach commented at the top.
 | Day | Topic | Problems Solved |
 |-----|-------|----------------|
 | 01  | Arrays | Set Matrix Zeroes, Pascal's Triangle, Next Permutation |
+| 02  | Arrays | Kadnes ALgorithm, sort colors, Buy and sell stock |
+
+
 
 ---
 
