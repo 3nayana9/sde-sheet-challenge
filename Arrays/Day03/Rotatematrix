@@ -1,0 +1,52 @@
+/*
+  Problem: Merge Sorted Array (Without Extra Space)
+  Link: https://leetcode.com/problems/merge-sorted-array/
+
+  Approach:
+  - Brute: Copy both arrays, sort, place back
+  - Better: Use extra space with two pointers
+  - Optimal (implemented) — Gap Method (Shell Sort idea):
+      1. Start with gap = ceil((m+n) / 2)
+      2. Use two pointers left=0, right=left+gap
+      3. Compare and swap if out of order (handling 3 cases:
+         both in nums1, both in nums2, one in each)
+      4. Shrink gap = ceil(gap/2) each iteration until gap == 1
+      5. Copy nums2 into end of nums1
+
+  Time: O((m+n) log(m+n))  Space: O(1)
+*/
+
+class Solution {
+public:
+    void swapIfGreater(vector<int>& nums1, vector<int>& nums2, int ind1, int ind2){
+        if(nums1[ind1] > nums2[ind2]){
+            swap(nums1[ind1], nums2[ind2]);
+        }
+    }
+
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        
+        int len = m + n;
+        int gap = (len / 2) + (len % 2);
+
+        while(gap > 0){
+            int left = 0, right = left + gap;
+            while(right < len){
+                if(left < m && right >= m){
+                    swapIfGreater(nums1, nums2, left, right - m);
+                } else if(left >= m){
+                    swapIfGreater(nums2, nums2, left - m, right - m);
+                } else {
+                    swapIfGreater(nums1, nums1, left, right);
+                }
+                left++; right++;
+            }
+            if(gap == 1) break;
+            gap = (gap / 2) + (gap % 2);
+        }
+
+        for(int i = m; i < nums1.size(); i++){
+            nums1[i] = nums2[i - m];
+        }
+    }
+};
