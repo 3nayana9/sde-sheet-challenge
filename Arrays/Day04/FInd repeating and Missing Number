@@ -1,0 +1,75 @@
+/*
+  Problem: Find the Repeating and Missing Number
+
+  Approach 1 — Math (Sum of N naturals + Sum of Squares):
+      Let X = repeating, Y = missing
+      s  - sn  = X - Y          ... (i)
+      s2 - sn2 = X^2 - Y^2      ... (ii)
+      Divide (ii) by (i) => X + Y ... (iii)
+      Solve (i) and (iii) for X and Y
+
+  Approach 2 — XOR (implemented below as well):
+      XOR all elements and 1..N to get X^Y
+      Find any set bit, split elements into two groups by that bit
+      XOR each group to isolate X and Y
+      Verify which is repeating by counting occurrences
+
+  Time: O(N)  Space: O(1)
+*/
+
+void repeatedAndMissing(vector<int> arr, int N) {
+
+    // --- Approach 1: Math ---
+    long long s = 0, sn = (long long)(N * (N + 1)) / 2;
+    long long s2 = 0, sn2 = (long long)(N * (N + 1) * (2 * N + 1)) / 6;
+
+    for (int i = 0; i < N; i++) {
+        s  += arr[i];
+        s2 += (long long)arr[i] * arr[i];
+    }
+
+    long long a = s - sn;        // X - Y
+    long long b = (s2 - sn2) / a; // X + Y
+    int x = (a + b) / 2;          // Repeated
+    int y = x - a;                 // Missing
+
+    cout << "Repeated: " << x << "\n";
+    cout << "Missing : " << y << "\n";
+
+    // --- Approach 2: XOR ---
+    int xr = 0;
+    for (int i = 0; i < N; i++) {
+        xr ^= arr[i];
+        xr ^= (i + 1);
+    }
+
+    int bit = 0;
+    for (int i = 0; i < 32; i++) {
+        if ((xr >> i) & 1) {
+            bit = i;
+            break;
+        }
+    }
+
+    x = 0; y = 0;
+    for (int i = 0; i < N; i++) {
+        if ((arr[i] >> bit) & 1) x ^= arr[i];
+        else y ^= arr[i];
+
+        if (((i + 1) >> bit) & 1) x ^= (i + 1);
+        else y ^= (i + 1);
+    }
+
+    int cnt = 0;
+    for (int i = 0; i < N; i++) {
+        if (arr[i] == x) cnt++;
+    }
+
+    if (cnt) {
+        cout << "Repeated: " << x << "\n";
+        cout << "Missing : " << y << "\n";
+    } else {
+        cout << "Repeated: " << y << "\n";
+        cout << "Missing : " << x << "\n";
+    }
+}
