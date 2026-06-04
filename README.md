@@ -1,4 +1,4 @@
-<img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/3a3b4dfb-6b53-409b-b6cb-f6f1af1582eb" /># 📌 Striver's SDE Sheet Challenge
+# 📌 Striver's SDE Sheet Challenge
 
 Solving Striver's SDE Sheet one day at a time.  
 Tracking progress, approach, and key learnings for each problem.
@@ -13,9 +13,6 @@ Tracking progress, approach, and key learnings for each problem.
 sde-sheet-challenge/
 ├── Arrays/
 │   ├── Day01/
-│   │   ├── SetMatrixZeroes.cpp
-│   │   ├── PascalsTriangle.cpp
-│   │   └── NextPermutation.cpp
 ├── LinkedList/
 ├── Trees/
 ├── Graphs/
@@ -32,9 +29,9 @@ Each file has the problem approach commented at the top.
 | Day | Topic | Problems Solved |
 |-----|-------|----------------|
 | 01  | Arrays | Set Matrix Zeroes, Pascal's Triangle, Next Permutation |
-| 02  | Arrays | Kadnes ALgorithm, sort colors, Buy and sell stock |
-
-
+| 02  | Arrays | Kadane's Algorithm, Sort Colors, Buy and Sell Stock |
+| 03  | Arrays Part-II | Rotate Matrix, Merge Overlapping Intervals, Merge Two Sorted Arrays Without Extra Space |
+| 04  | Arrays Part-II | Find the Duplicate Number, Find Repeating and Missing Number, Count Inversions |
 
 ---
 
