@@ -1,0 +1,59 @@
+/*
+  Problem: Count Inversions in an Array
+  (A[i], A[j]) such that i < j but A[i] > A[j]
+
+  Approach:
+  - Brute: Check all pairs O(N^2)
+  - Optimal (implemented) — Modified Merge Sort:
+      During the merge step, when an element from the right half
+      is picked over the left half, all remaining elements in the
+      left half are greater than it => they all form inversions.
+      Count += (mid - left + 1) each time this happens.
+
+  Time: O(N logN)  Space: O(N) for temp array
+*/
+
+int merge(vector<int>& ar, int l, int mid, int h) {
+    
+    int left = l, right = mid + 1, cnt = 0;
+    vector<int> arr;
+
+    while (left <= mid && right <= h) {
+        if (ar[left] <= ar[right]) {
+            arr.push_back(ar[left]);
+            left++;
+        } else {
+            arr.push_back(ar[right]);
+            cnt += (mid - left + 1); // all left elements form inversions
+            right++;
+        }
+    }
+
+    while (left <= mid) {
+        arr.push_back(ar[left]);
+        left++;
+    }
+    while (right <= h) {
+        arr.push_back(ar[right]);
+        right++;
+    }
+
+    for (int i = l; i <= h; i++) {
+        ar[i] = arr[i - l];
+    }
+
+    return cnt;
+}
+
+int mergesort(vector<int>& ar, int l, int h) {
+    
+    int cnt = 0;
+    if (l >= h) return cnt;
+
+    int mid = (l + h) / 2;
+    cnt += mergesort(ar, l, mid);
+    cnt += mergesort(ar, mid + 1, h);
+    cnt += merge(ar, l, mid, h);
+
+    return cnt;
+}
