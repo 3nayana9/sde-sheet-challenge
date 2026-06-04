@@ -1,0 +1,38 @@
+/*
+  Problem: Find the Duplicate Number
+  Link: https://leetcode.com/problems/find-the-duplicate-number/
+
+  Approach:
+  - Brute: Sort and check adjacent elements O(n logn)
+  - Better: Use a frequency/visited array O(n) space
+  - Optimal (implemented) — Floyd's Cycle Detection:
+      Treat array as linked list where index = node, value = next node.
+      Since a duplicate exists, there will be a cycle.
+      1. Move slow by 1 step, fast by 2 steps until they meet (inside cycle)
+      2. Reset slow to 0, keep fast at meeting point
+      3. Move both 1 step at a time — they meet at the duplicate
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        
+        int slow = 0;
+        int fast = 0;
+
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while (slow != fast);
+
+        slow = 0;
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        
+        return slow;
+    }
+};
