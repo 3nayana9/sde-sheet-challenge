@@ -1,0 +1,33 @@
+/*
+  Problem: Search a 2D Matrix
+  Link: https://leetcode.com/problems/search-a-2d-matrix/
+
+  Approach:
+  - Brute: Linear scan entire matrix O(m*n)
+  - Better: Binary search each row O(m logn)
+  - Optimal (implemented):
+      Treat the entire matrix as a flattened sorted 1D array.
+      Run binary search on range [0, m*n - 1].
+      Map mid index back to 2D: row = mid/m, col = mid%m
+
+  Time: O(log(m*n))  Space: O(1)
+*/
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        
+        int low = 0, high = (matrix.size() * matrix[0].size() - 1);
+        int m = matrix[0].size();
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int r = mid / m, c = mid % m;
+
+            if (matrix[r][c] == target) return true;
+            else if (matrix[r][c] > target) high = mid - 1;
+            else low = mid + 1;
+        }
+        return false;
+    }
+};
