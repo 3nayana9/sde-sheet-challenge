@@ -1,0 +1,32 @@
+/*
+  Problem: Pow(x, n)
+  Link: https://leetcode.com/problems/powx-n/
+
+  Approach:
+  - Brute: Multiply x, n times O(n)
+  - Optimal (implemented) — Fast Exponentiation:
+      If n is even: x^n = (x*x)^(n/2)  → halves the problem
+      If n is odd:  x^n = x * x^(n-1)  → reduces to even case
+      For negative n: flip x to 1/x, work with positive N
+      Use long long for N to handle INT_MIN edge case
+
+  Time: O(log N)  Space: O(log N) recursion stack
+*/
+
+class Solution {
+public:
+    double solve(double x, long long n) {
+        if (n == 0) return 1;
+        if (n % 2 == 0) return solve(x * x, n / 2);
+        return x * solve(x, n - 1);
+    }
+
+    double myPow(double x, int n) {
+        long long N = n;
+        if (n < 0) {
+            x = 1 / x;
+            N = -N;
+        }
+        return solve(x, N);
+    }
+};
