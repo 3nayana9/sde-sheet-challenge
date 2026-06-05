@@ -1,0 +1,36 @@
+/*
+  Problem: Majority Element
+  Link: https://leetcode.com/problems/majority-element/
+
+  Approach:
+  - Brute: Count frequency of each element O(n^2)
+  - Better: Use a hash map O(n) time, O(n) space
+  - Optimal (implemented) — Moore's Voting Algorithm:
+      Maintain a candidate and a count.
+      If count == 0, set current element as new candidate.
+      If current == candidate, increment count.
+      Else decrement count.
+      The majority element (appears > n/2 times) always survives
+      because it can't be fully cancelled out by others.
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int ele, cnt = 0;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (cnt == 0) {
+                cnt = 1;
+                ele = nums[i];
+            } else if (nums[i] == ele) {
+                cnt++;
+            } else {
+                cnt--;
+            }
+        }
+        return ele;
+    }
+};
