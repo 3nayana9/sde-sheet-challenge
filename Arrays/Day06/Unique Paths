@@ -1,0 +1,26 @@
+/*
+  Problem: Unique Paths
+  Link: https://leetcode.com/problems/unique-paths/
+
+  Approach:
+  - Brute: Recursion — explore all paths O(2^(m+n))
+  - Better: Memoization O(m*n) time and space
+  - Optimal (implemented) — 1D DP:
+      Initialize dp array of size n with all 1s (first row).
+      For each subsequent row, dp[j] += dp[j-1].
+      dp[j] represents paths to reach cell (i, j) from top-left.
+      Accumulates paths from left (dp[j-1]) and above (dp[j]).
+
+  Time: O(M*N)  Space: O(N)
+*/
+
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<int> dp(n, 1);
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++)
+                dp[j] += dp[j - 1];
+        return dp[n - 1];
+    }
+};
