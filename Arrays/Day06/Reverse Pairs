@@ -1,0 +1,59 @@
+/*
+  Problem: Reverse Pairs
+  Link: https://leetcode.com/problems/reverse-pairs/
+
+  Approach:
+  - Brute: Check all pairs for arr[i] > 2*arr[j] where i < j — O(n^2)
+  - Optimal (implemented) — Modified Merge Sort:
+      Count reverse pairs BEFORE merging (not during), because
+      merging changes the order and invalidates future comparisons.
+      For each left[i], count how many right[j] satisfy arr[i] > 2*arr[j]
+      using a two-pointer approach on the sorted halves.
+      Note: use 2LL to avoid integer overflow on 2*arr[right].
+
+  Time: O(N logN)  Space: O(N)
+*/
+
+class Solution {
+public:
+    int merge(vector<int>& ar, int l, int m, int h) {
+
+        vector<int> temp;
+        int left = l, right = m + 1, cnt = 0;
+
+        // Count reverse pairs
+        for (; left <= m; left++) {
+            while (right <= h && ar[left] > 2LL * ar[right]) {
+                right++;
+            }
+            cnt += (right - (m + 1));
+        }
+
+        // Merge the two halves
+        left = l; right = m + 1;
+        while (left <= m && right <= h) {
+            if (ar[left] <= ar[right]) temp.push_back(ar[left++]);
+            else temp.push_back(ar[right++]);
+        }
+        while (left <= m)  temp.push_back(ar[left++]);
+        while (right <= h) temp.push_back(ar[right++]);
+
+        for (int i = l; i <= h; i++) ar[i] = temp[i - l];
+
+        return cnt;
+    }
+
+    int mergeSort(vector<int>& ar, int l, int h) {
+        int cnt = 0;
+        if (l >= h) return cnt;
+        int m = (l + h) / 2;
+        cnt += mergeSort(ar, l, m);
+        cnt += mergeSort(ar, m + 1, h);
+        cnt += merge(ar, l, m, h);
+        return cnt;
+    }
+
+    int reversePairs(vector<int>& nums) {
+        return mergeSort(nums, 0, nums.size() - 1);
+    }
+};
