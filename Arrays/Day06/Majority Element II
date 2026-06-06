@@ -1,0 +1,50 @@
+/*
+  Problem: Majority Element II
+  Link: https://leetcode.com/problems/majority-element-ii/
+
+  Approach:
+  - Brute: Count frequency of each element O(n^2)
+  - Better: Use a hash map O(n) time, O(n) space
+  - Optimal (implemented) — Extended Moore's Voting:
+      At most 2 elements can appear more than n/3 times.
+      Maintain two candidates (ele1, ele2) and two counts.
+      Key condition: when setting a new candidate, make sure
+      it's not the same as the other existing candidate.
+      After first pass, verify both candidates with a second pass.
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        
+        vector<int> ans;
+        int cnt1 = 0, cnt2 = 0, ele1, ele2;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (cnt1 == 0 && nums[i] != ele2) {
+                ele1 = nums[i];
+                cnt1++;
+            } else if (cnt2 == 0 && nums[i] != ele1) {
+                ele2 = nums[i];
+                cnt2++;
+            } else if (nums[i] == ele1) cnt1++;
+            else if (nums[i] == ele2) cnt2++;
+            else cnt1--, cnt2--;
+        }
+
+        int mini = (nums.size() / 3) + 1;
+        cnt1 = 0; cnt2 = 0;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] == ele1) cnt1++;
+            if (nums[i] == ele2) cnt2++;
+        }
+
+        if (cnt1 >= mini) ans.push_back(ele1);
+        if (cnt2 >= mini && ele1 != ele2) ans.push_back(ele2);
+
+        return ans;
+    }
+};
