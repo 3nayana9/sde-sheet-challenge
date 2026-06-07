@@ -1,0 +1,38 @@
+/*
+  Problem: Longest Consecutive Sequence
+  Link: https://leetcode.com/problems/longest-consecutive-sequence/
+
+  Approach:
+  - Brute: Sort and scan O(n logn)
+  - Optimal (implemented) — Unordered Set:
+      Insert all elements into an unordered_set.
+      For each element, check if (i - 1) exists in the set.
+      If not, it's the start of a new sequence — count forward.
+      Skip all elements that are not sequence starts.
+      Each element is visited at most twice overall → O(n).
+
+  Time: O(N)  Space: O(N)
+*/
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> s;
+        int curr = 0, longest = 0;
+
+        for (int i = 0; i < nums.size(); i++) s.insert(nums[i]);
+
+        for (int i : s) {
+            if (s.find(i - 1) == s.end()) {
+                curr = 0;
+                int x = i;
+                while (s.find(x) != s.end()) {
+                    x++;
+                    curr++;
+                }
+                longest = max(longest, curr);
+            }
+        }
+        return longest;
+    }
+};
