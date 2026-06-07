@@ -1,0 +1,28 @@
+/*
+  Problem: Two Sum
+  Link: https://leetcode.com/problems/two-sum/
+
+  Approach:
+  - Brute: Check all pairs O(n^2)
+  - Optimal (implemented) — HashMap:
+      For each element, check if (target - nums[i]) exists in map.
+      If yes, return both indices.
+      If no, store nums[i] -> i in the map and move on.
+      One pass, O(n).
+
+  Time: O(N)  Space: O(N)
+*/
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        
+        map<int, int> mpp;
+        for (int i = 0; i < nums.size(); i++) {
+            if (mpp.find(target - nums[i]) != mpp.end())
+                return {i, mpp[target - nums[i]]};
+            mpp[nums[i]] = i;
+        }
+        return {-1, -1};
+    }
+};
