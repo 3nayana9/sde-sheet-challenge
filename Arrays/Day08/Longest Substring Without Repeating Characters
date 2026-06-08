@@ -1,0 +1,39 @@
+/*
+  Problem: Longest Substring Without Repeating Characters
+  Link: https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+  Approach:
+  - Brute: Check all substrings O(n^3)
+  - Optimal (implemented) — Sliding Window + HashMap:
+      Use two pointers i (left) and j (right).
+      Expand window by moving j and adding to map.
+      When a character repeats (frequency > 1), shrink from i
+      until the duplicate is removed.
+      Track max window size = j - i at each step.
+
+  Time: O(N)  Space: O(N)
+*/
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+
+        if (s == "") return 0;
+
+        int maxLen = 1;
+        unordered_map<char, int> mp;
+        int i = 0, j = 0;
+
+        while (j < s.size()) {
+            mp[s[j]]++;
+            maxLen = max(maxLen, j - i);
+
+            while (mp[s[j]] > 1) {
+                mp[s[i]]--;
+                i++;
+            }
+            j++;
+        }
+        return max(maxLen, j - i);
+    }
+};
