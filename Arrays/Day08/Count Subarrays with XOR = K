@@ -1,0 +1,31 @@
+/*
+  Problem: Count Subarrays with XOR = K
+
+  Approach:
+  - Brute: Generate all subarrays and compute XOR O(n^3)
+  - Better: Generate subarrays with running XOR O(n^2)
+  - Optimal (implemented) — Prefix XOR + HashMap:
+      Similar to "count subarrays with sum K" but using XOR.
+      Maintain running XOR (xr). For each index:
+        - We want subarrays where XOR = k
+        - If xr ^ k exists in map, those subarrays end here with XOR = k
+        - xr ^ (xr ^ k) = k — the math checks out
+      Initialize map with {0: 1} to handle subarrays starting from index 0.
+
+  Time: O(N)  Space: O(N)
+*/
+
+int subArraysWithXORk(vector<int> arr, int N, int k) {
+
+    int xr = 0, cnt = 0;
+    unordered_map<int, int> mp;
+    mp[xr]++; // {0, 1}
+
+    for (int i = 0; i < N; i++) {
+        xr = xr ^ arr[i];
+        int x = xr ^ k;
+        cnt += mp[x];
+        mp[xr]++;
+    }
+    return cnt;
+}
