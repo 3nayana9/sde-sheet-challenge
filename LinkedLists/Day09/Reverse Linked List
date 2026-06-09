@@ -1,0 +1,29 @@
+/*
+  Problem: Reverse Linked List
+  Link: https://leetcode.com/problems/reverse-linked-list/
+
+  Approach:
+  - Iterative: Use prev, curr, next pointers O(n) Space O(1)
+  - Optimal (implemented) — Recursive:
+      Recurse to the last node (base case: head == NULL or head->next == NULL)
+      On the way back:
+        head->next->next = head  (reverse the link)
+        head->next = NULL        (remove old forward link)
+      Return newHead all the way up — it's always the original last node.
+
+  Time: O(N)  Space: O(N) recursion stack
+*/
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+
+        if (head == NULL || head->next == NULL) return head;
+
+        ListNode* newHead = reverseList(head->next);
+        head->next->next = head;
+        head->next = NULL;
+
+        return newHead;
+    }
+};
