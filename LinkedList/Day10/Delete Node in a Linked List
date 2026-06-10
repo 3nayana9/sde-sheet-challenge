@@ -1,0 +1,24 @@
+/*
+  Problem: Delete Node in a Linked List
+  Link: https://leetcode.com/problems/delete-node-in-a-linked-list/
+
+  Approach:
+  - Can't use standard deletion (no access to previous node).
+  - Trick (implemented):
+      Copy the value of node->next into node.
+      Set node->next = node->next->next (skip the next node).
+      Delete the now-redundant next node.
+      Effectively the current node "becomes" the next node.
+
+  Time: O(1)  Space: O(1)
+*/
+
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        ListNode* temp = node->next;
+        node->val = temp->val;
+        node->next = temp->next;
+        delete temp;
+    }
+};
