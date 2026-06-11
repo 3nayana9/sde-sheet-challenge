@@ -1,0 +1,36 @@
+/*
+  Problem: Intersection of Two Linked Lists
+  Link: https://leetcode.com/problems/intersection-of-two-linked-lists/
+
+  Approach:
+  - Brute: Use a HashSet to store nodes of one list, check other list O(n) space
+  - Optimal (implemented) — Two Pointers:
+      t1 starts at headA, t2 starts at headB.
+      Both move one step at a time.
+      When t1 hits NULL, redirect to headB.
+      When t2 hits NULL, redirect to headA.
+      They travel equal total distances (lenA + lenB),
+      so they meet at the intersection node (or both reach NULL if no intersection).
+
+  Time: O(N+M)  Space: O(1)
+*/
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        
+        ListNode* t1 = headA;
+        ListNode* t2 = headB;
+
+        while (t1 != t2) {
+            t1 = t1->next;
+            t2 = t2->next;
+
+            if (t1 == t2) return t1;
+
+            if (t1 == NULL) t1 = headB;
+            if (t2 == NULL) t2 = headA;
+        }
+        return t1;
+    }
+};
