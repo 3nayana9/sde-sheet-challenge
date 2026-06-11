@@ -1,0 +1,58 @@
+/*
+  Problem: Reverse Nodes in k-Group
+  Link: https://leetcode.com/problems/reverse-nodes-in-k-group/
+
+  Approach:
+  - Brute: Collect all values, reverse in groups, put back O(n) space
+  - Optimal (implemented) — In-place reversal with dummy node:
+      Use a dummy node and groupPrev pointer.
+      At each iteration:
+        1. Find the Kth node from groupPrev using getKth()
+        2. If fewer than K nodes remain, stop
+        3. Save groupNext = kth->next, set kth->next = NULL
+        4. Reverse the group using prev=groupNext, curr=groupPrev->next
+        5. Reconnect: groupPrev->next = kth, advance groupPrev to old head
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    ListNode* getKth(ListNode* curr, int k) {
+        while (curr && k > 0) {
+            k--;
+            curr = curr->next;
+        }
+        return curr;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* groupPrev = dummy;
+
+        while (true) {
+            ListNode* kth = getKth(groupPrev, k);
+            if (!kth) break;
+
+            ListNode* groupNext = kth->next;
+            kth->next = NULL;
+
+            ListNode* prev = groupNext;
+            ListNode* curr = groupPrev->next;
+
+            for (int i = 0; i < k; i++) {
+                ListNode* front = curr->next;
+                curr->next = prev;
+                prev = curr;
+                curr = front;
+            }
+
+            ListNode* temp = groupPrev->next;
+            groupPrev->next = kth;
+            groupPrev = temp;
+        }
+        return dummy->next;
+    }
+};
