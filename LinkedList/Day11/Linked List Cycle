@@ -1,0 +1,30 @@
+/*
+  Problem: Linked List Cycle
+  Link: https://leetcode.com/problems/linked-list-cycle/
+
+  Approach:
+  - Brute: Use a HashSet to store visited nodes O(n) space
+  - Optimal (implemented) — Floyd's Cycle Detection:
+      slow moves 1 step, fast moves 2 steps.
+      If they ever meet, there's a cycle.
+      If fast reaches NULL, no cycle exists.
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+};
