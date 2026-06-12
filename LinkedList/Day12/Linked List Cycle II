@@ -1,0 +1,41 @@
+/*
+  Problem: Linked List Cycle II (Find Start of Loop)
+  Link: https://leetcode.com/problems/linked-list-cycle-ii/
+
+  Approach:
+  - Brute: Use a HashSet to store visited nodes O(n) space
+  - Optimal (implemented) — Floyd's + Math:
+      Phase 1: Detect cycle using slow/fast pointers.
+               If fast reaches NULL, no cycle.
+      Phase 2: Reset slow to head, keep fast at meeting point.
+               Move both one step at a time.
+               They meet at the loop's entry point.
+      Why it works: distance from head to loop start
+                  = distance from meeting point to loop start.
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast) break;
+        }
+
+        if (fast == NULL || fast->next == NULL) return NULL;
+
+        slow = head;
+        while (slow != fast) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+        return slow;
+    }
+};
