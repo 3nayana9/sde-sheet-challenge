@@ -1,0 +1,54 @@
+/*
+  Problem: Palindrome Linked List
+  Link: https://leetcode.com/problems/palindrome-linked-list/
+
+  Approach:
+  - Brute: Copy values to array, check palindrome O(n) space
+  - Optimal (implemented):
+      1. Find middle using slow/fast pointers
+         (fast condition: fast->next && fast->next->next to land slow at first half end)
+      2. Reverse second half starting from slow->next
+      3. Compare first half (fast from head) with reversed second half (slow)
+      4. Restore list by reversing second half again
+      5. Return result
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    ListNode* reverseLL(ListNode* head) {
+        if (head == NULL || head->next == NULL) return head;
+        ListNode* newHead = reverseLL(head->next);
+        head->next->next = head;
+        head->next = NULL;
+        return newHead;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        if (head == NULL || head->next == NULL) return true;
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast->next != NULL && fast->next->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        ListNode* n = reverseLL(slow->next);
+        fast = head;
+        slow = n;
+
+        while (slow != NULL) {
+            if (slow->val != fast->val) {
+                n = reverseLL(n);
+                return false;
+            }
+            fast = fast->next;
+            slow = slow->next;
+        }
+        n = reverseLL(n);
+        return true;
+    }
+};
