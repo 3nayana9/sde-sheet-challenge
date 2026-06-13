@@ -1,0 +1,46 @@
+/*
+  Problem: Rotate List
+  Link: https://leetcode.com/problems/rotate-list/
+
+  Approach:
+  - Brute: Rotate one step at a time k times O(n*k)
+  - Optimal (implemented):
+      1. Find length and tail node
+      2. Make list circular: tail->next = head
+      3. Effective rotations = k % len (handle k > len)
+      4. New tail is at position (len - k) from start
+      5. Break circle: head = newTail->next, newTail->next = NULL
+      Edge case: if k % len == 0, no rotation needed.
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+
+        if (head == NULL || k == 0) return head;
+
+        int len = 1;
+        ListNode* tail = head;
+        while (tail->next != NULL) {
+            len++;
+            tail = tail->next;
+        }
+
+        if (k % len == 0) return head;
+
+        tail->next = head; // make circular
+
+        k = k % len;
+        k = len - k; // steps to new tail
+
+        ListNode* temp = head;
+        for (int i = 1; i < k; i++) temp = temp->next;
+
+        head = temp->next;
+        temp->next = NULL;
+
+        return head;
+    }
+};
