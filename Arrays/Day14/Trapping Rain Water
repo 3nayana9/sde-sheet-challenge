@@ -1,0 +1,43 @@
+/*
+  Problem: Trapping Rain Water
+  Link: https://leetcode.com/problems/trapping-rain-water/
+
+  Approach:
+  - Brute: For each element find leftMax and rightMax — O(n^2)
+  - Better: Precompute prefix leftMax[] and rightMax[] arrays — O(n) space
+  - Optimal (implemented) — Find global max, two passes:
+      Find index of global maximum.
+      Left pass (0 to maxi): track running left max, add (leftMax - arr[i])
+      Right pass (N-1 to maxi): track running right max, add (rightMax - arr[i])
+      Water trapped at each bar = min(leftMax, rightMax) - arr[i],
+      which is naturally handled by the two-pass approach.
+
+  Time: O(N)  Space: O(1)
+*/
+
+class Solution {
+public:
+    int trap(vector<int>& arr) {
+        
+        int N = arr.size();
+        int maxi = 0, ans = 0;
+
+        for (int i = 0; i < N; i++) {
+            if (arr[i] > arr[maxi]) maxi = i;
+        }
+
+        int m = 0;
+        for (int i = 0; i < maxi; i++) {
+            m = max(m, arr[i]);
+            ans += m - arr[i];
+        }
+
+        m = 0;
+        for (int i = N - 1; i > maxi; i--) {
+            m = max(m, arr[i]);
+            ans += m - arr[i];
+        }
+
+        return ans;
+    }
+};
