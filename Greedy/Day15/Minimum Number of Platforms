@@ -1,0 +1,35 @@
+/*
+  Problem: Minimum Number of Platforms Required for a Railway Station
+
+  Approach:
+  - Brute: Check all pairs of trains for overlap O(n^2)
+  - Optimal (implemented) — Event sweep:
+      Merge arrivals and departures into one list with tags (0=arrival, 1=departure).
+      Sort the list (departures before arrivals at same time due to tag ordering).
+      Sweep through: +1 on arrival, -1 on departure.
+      Track max count — that's the minimum platforms needed.
+
+  Time: O(N logN)  Space: O(N)
+*/
+
+int minPlatforms(vector<int>& arr, vector<int>& dept) {
+
+    vector<pair<int, int>> train;
+
+    for (int i = 0; i < arr.size(); i++) {
+        train.push_back({arr[i], 0});  // 0 = arrival
+        train.push_back({dept[i], 1}); // 1 = departure
+    }
+
+    sort(train.begin(), train.end());
+
+    int cnt = 0, maxCnt = INT_MIN;
+
+    for (int i = 0; i < train.size(); i++) {
+        maxCnt = max(maxCnt, cnt);
+        if (train[i].second == 0) cnt++;
+        else cnt--;
+    }
+
+    return maxCnt;
+}
