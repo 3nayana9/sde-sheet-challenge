@@ -1,0 +1,38 @@
+/*
+  Problem: Fractional Knapsack
+
+  Approach:
+  - Optimal (implemented) — Greedy, sort by value/weight ratio:
+      Sort items by (value/weight) ratio descending.
+      Greedily take whole items while capacity allows.
+      For the item that doesn't fully fit, take a fraction.
+      Works here (unlike 0/1 knapsack) because items are divisible.
+
+  Time: O(N logN)  Space: O(1)
+*/
+
+bool cmp(pair<int, int>& a, pair<int, int>& b) {
+    double k1 = (double)a.first / a.second;
+    double k2 = (double)b.first / b.second;
+    return k1 > k2;
+}
+
+int fractionalKapsack(vector<pair<int, int>>& w, int cap) {
+
+    sort(w.begin(), w.end(), cmp);
+
+    int i = 0;
+    double ans = 0;
+
+    while (cap > 0 && i < w.size()) {
+        if (cap >= w[i].second) {
+            cap -= w[i].second;
+            ans += w[i].first;
+        } else {
+            ans += cap * ((double)w[i].first / w[i].second);
+            cap = 0;
+        }
+        i++;
+    }
+    return ans;
+}
