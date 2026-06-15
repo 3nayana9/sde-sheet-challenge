@@ -1,0 +1,30 @@
+/*
+  Problem: N Meetings in One Room
+
+  Approach:
+  - Optimal (implemented) — Greedy, sort by end time:
+      Pair each meeting's (end, start) and sort by end time.
+      Greedily pick a meeting if its start > last picked meeting's end.
+      Always picking earliest finishing meeting maximises future choices.
+
+  Time: O(N logN)  Space: O(N)
+*/
+
+int NmeetingsinaRoom(vector<int>& start, vector<int>& end) {
+
+    vector<pair<int, int>> m;
+    for (int i = 0; i < start.size(); i++) {
+        m.push_back({end[i], start[i]});
+    }
+
+    sort(m.begin(), m.end());
+
+    int cnt = 1, x = m[0].first;
+    for (int i = 1; i < m.size(); i++) {
+        if (m[i].second > x) {
+            x = m[i].first;
+            cnt++;
+        }
+    }
+    return cnt;
+}
