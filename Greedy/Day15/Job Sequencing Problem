@@ -1,0 +1,49 @@
+/*
+  Problem: Job Sequencing Problem
+
+  Approach:
+  - Optimal (implemented) — Greedy, sort by profit descending:
+      Sort jobs by profit (highest first).
+      For each job, try to schedule at its deadline slot.
+      If taken, go back to find the nearest free earlier slot.
+      If slot >= 1 found, mark it and add profit.
+      Greedy logic: always schedule the highest profit job first.
+
+  Time: O(N logN + N*maxDeadline)  Space: O(maxDeadline)
+*/
+
+struct Job {
+    int id;
+    int deadline;
+    int profit;
+};
+
+bool comp(Job& a, Job& b) {
+    return a.profit > b.profit;
+}
+
+vector<int> JobScheduling(Job arr[], int n) {
+
+    sort(arr, arr + n, comp);
+
+    int maxdeadline = 0;
+    for (int i = 0; i < n; i++) {
+        maxdeadline = max(maxdeadline, arr[i].deadline);
+    }
+
+    vector<int> marked(maxdeadline + 1, -1);
+
+    int maxProfit = 0, cnt = 0;
+    for (int i = 0; i < n; i++) {
+        int idx = arr[i].deadline;
+
+        while (idx > 0 && marked[idx] != -1) idx--;
+
+        if (idx >= 1) {
+            marked[idx] = arr[i].id;
+            cnt++;
+            maxProfit += arr[i].profit;
+        }
+    }
+    return {cnt, maxProfit};
+}
