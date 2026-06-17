@@ -1,0 +1,30 @@
+/*
+  Problem: Assign Cookies
+  Link: https://leetcode.com/problems/assign-cookies/
+
+  Approach:
+  - Optimal (implemented) — Greedy + Two Pointers:
+      Sort greed factors g[] and cookie sizes s[].
+      Use two pointers l (children) and r (cookies).
+      If s[r] >= g[l], the cookie satisfies the child — assign it, move l.
+      Always move r regardless.
+      Greedy: try to satisfy least greedy child with smallest possible cookie.
+
+  Time: O(N logN + M logM)  Space: O(1)
+*/
+
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+
+        int l = 0, r = 0;
+        while (l < g.size() && r < s.size()) {
+            if (g[l] <= s[r]) l++;
+            r++;
+        }
+        return l;
+    }
+};
