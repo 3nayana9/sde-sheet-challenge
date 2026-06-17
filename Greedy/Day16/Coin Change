@@ -1,0 +1,34 @@
+/*
+  Problem: Coin Change
+  Link: https://leetcode.com/problems/coin-change/
+
+  Approach:
+  - Greedy doesn't work (coins not canonical denomination)
+  - Optimal (implemented) — 1D DP:
+      dp[i] = minimum coins needed to make amount i
+      Initialize dp[0] = 0, rest = amount+1 (acts as infinity)
+      For each amount i, try every coin:
+        if i - coin >= 0: dp[i] = min(dp[i], dp[i - coin] + 1)
+      Return -1 if dp[amount] > amount (unreachable)
+
+  Time: O(amount * coins.size())  Space: O(amount)
+*/
+
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        
+        vector<int> dp(amount + 1, amount + 1);
+        dp[0] = 0;
+
+        for (int i = 1; i <= amount; ++i) {
+            for (int coin : coins) {
+                if (i - coin >= 0) {
+                    dp[i] = min(dp[i], dp[i - coin] + 1);
+                }
+            }
+        }
+
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+};
