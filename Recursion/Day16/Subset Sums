@@ -1,0 +1,31 @@
+/*
+  Problem: Subset Sums
+
+  Approach:
+  - Optimal (implemented) — Recursion:
+      At each index, two choices: include arr[idx] in sum or skip it.
+      When idx reaches arr.size(), push current sum into answer.
+      Generates all 2^n possible subset sums.
+
+  Time: O(2^N)  Space: O(N) recursion stack
+*/
+
+class Solution {
+public:
+    void solve(int idx, vector<int>& arr, int sum, vector<int>& ans) {
+        if (idx == arr.size()) {
+            ans.push_back(sum);
+            return;
+        }
+        // include
+        solve(idx + 1, arr, sum + arr[idx], ans);
+        // exclude
+        solve(idx + 1, arr, sum, ans);
+    }
+
+    vector<int> subsetSums(vector<int>& arr) {
+        vector<int> ans;
+        solve(0, arr, 0, ans);
+        return ans;
+    }
+};
