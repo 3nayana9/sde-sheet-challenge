@@ -1,0 +1,36 @@
+/*
+  Problem: Combination Sum
+  Link: https://leetcode.com/problems/combination-sum/
+
+  Approach:
+  - Optimal (implemented) — Recursion:
+      At each index, two choices:
+        1. Pick candidates[idx] again (stay at same idx, subtract from sum)
+        2. Skip it (move to idx+1)
+      Base: if Sum == 0 push temp; if idx == size or Sum < 0 return.
+      Elements can be reused since we don't increment idx when picking.
+
+  Time: O(2^(target/min_coin))  Space: O(target/min_coin) stack depth
+*/
+
+class Solution {
+public:
+    void CS(vector<vector<int>>& ans, int idx, int Sum, vector<int>& temp, vector<int>& candidates) {
+        if (Sum < 0) return;
+        if (idx == candidates.size()) {
+            if (Sum == 0) ans.push_back(temp);
+            return;
+        }
+        temp.push_back(candidates[idx]);
+        CS(ans, idx, Sum - candidates[idx], temp, candidates);
+        temp.pop_back();
+        CS(ans, idx + 1, Sum, temp, candidates);
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        CS(ans, 0, target, temp, candidates);
+        return ans;
+    }
+};
