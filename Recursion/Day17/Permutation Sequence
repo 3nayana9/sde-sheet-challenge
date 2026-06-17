@@ -1,0 +1,46 @@
+/*
+  Problem: Permutation Sequence
+  Link: https://leetcode.com/problems/permutation-sequence/
+
+  Approach:
+  - Brute: Generate all permutations, return kth — O(n! * n)
+  - Optimal (implemented) — Rotation-based recursion:
+      For each position idx, rotate each character s[i] to front (idx).
+      Recurse for idx+1. Count permutations; stop when cnt == k.
+      Rotate back after recursion to restore state.
+      Early exit: once ans is set, unwind immediately.
+
+  Time: O(N^2)  Space: O(N) stack depth
+*/
+
+class Solution {
+public:
+    string ans = "";
+    int cnt = 0;
+
+    void solve(string& s, int idx, int k) {
+        if (idx == s.size()) {
+            cnt++;
+            if (cnt == k) ans = s;
+            return;
+        }
+        for (int i = idx; i < s.size(); i++) {
+            char temp = s[i];
+            for (int j = i; j > idx; j--) s[j] = s[j - 1];
+            s[idx] = temp;
+
+            solve(s, idx + 1, k);
+            if (!ans.empty()) return;
+
+            for (int j = idx; j < i; j++) s[j] = s[j + 1];
+            s[i] = temp;
+        }
+    }
+
+    string getPermutation(int n, int k) {
+        string s = "";
+        for (int i = 1; i <= n; i++) s += to_string(i);
+        solve(s, 0, k);
+        return ans;
+    }
+};
