@@ -1,0 +1,37 @@
+/*
+  Problem: Subsets II
+  Link: https://leetcode.com/problems/subsets-ii/
+
+  Approach:
+  - Brute: Generate all subsets, use a set to remove duplicates
+  - Optimal (implemented) — Recursion with duplicate skipping:
+      Sort nums first so duplicates are adjacent.
+      At each recursion level, use a for loop from idx to end.
+      Skip nums[i] if nums[i] == nums[i-1] AND i > idx
+      (only skip duplicate at same recursion level, not across levels).
+      Push temp to ans at every call (not just leaf nodes).
+
+  Time: O(2^N)  Space: O(N) recursion stack
+*/
+
+class Solution {
+public:
+    void subsets(vector<vector<int>>& ans, vector<int>& nums, int idx, vector<int>& temp) {
+        ans.push_back(temp);
+
+        for (int i = idx; i < nums.size(); i++) {
+            if (i > idx && nums[i] == nums[i - 1]) continue;
+            temp.push_back(nums[i]);
+            subsets(ans, nums, i + 1, temp);
+            temp.pop_back();
+        }
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> ans;
+        vector<int> temp;
+        subsets(ans, nums, 0, temp);
+        return ans;
+    }
+};
