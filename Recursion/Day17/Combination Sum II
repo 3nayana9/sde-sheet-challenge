@@ -1,0 +1,39 @@
+/*
+  Problem: Combination Sum II
+  Link: https://leetcode.com/problems/combination-sum-ii/
+
+  Approach:
+  - Optimal (implemented) — Recursion with duplicate skipping:
+      Sort candidates so duplicates are adjacent.
+      Use a for loop from idx; each element used at most once (i+1).
+      Skip arr[i] == arr[i-1] when i > idx to avoid duplicate combos
+      at the same recursion level (not across levels).
+      Break early if arr[i] > remaining sum (sorted array).
+
+  Time: O(2^N)  Space: O(N) stack depth
+*/
+
+class Solution {
+public:
+    void CS(vector<vector<int>>& ans, vector<int>& temp, vector<int>& arr, int idx, int Sum) {
+        if (Sum == 0) {
+            ans.push_back(temp);
+            return;
+        }
+        for (int i = idx; i < arr.size(); i++) {
+            if (i > idx && arr[i] == arr[i - 1]) continue;
+            if (arr[i] > Sum) break;
+            temp.push_back(arr[i]);
+            CS(ans, temp, arr, i + 1, Sum - arr[i]);
+            temp.pop_back();
+        }
+    }
+
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<int> temp;
+        vector<vector<int>> ans;
+        sort(candidates.begin(), candidates.end());
+        CS(ans, temp, candidates, 0, target);
+        return ans;
+    }
+};
