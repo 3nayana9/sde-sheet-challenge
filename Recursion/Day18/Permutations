@@ -1,0 +1,35 @@
+/*
+  Problem: Permutations
+  Link: https://leetcode.com/problems/permutations/
+
+  Approach:
+  - Optimal (implemented) — Swap-based recursion:
+      Fix position k, swap every element from k..end into position k.
+      Recurse for k+1.
+      Swap back to restore original order (backtrack).
+      Base: when k == nums.size()-1, push current nums as a permutation.
+      No extra visited array needed.
+
+  Time: O(N * N!)  Space: O(N) stack depth
+*/
+
+class Solution {
+public:
+    void permute(vector<vector<int>>& ans, vector<int>& nums, int k) {
+        if (k == nums.size() - 1) {
+            ans.push_back(nums);
+            return;
+        }
+        for (int i = k; i < nums.size(); i++) {
+            swap(nums[i], nums[k]);
+            permute(ans, nums, k + 1);
+            swap(nums[i], nums[k]);
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        permute(ans, nums, 0);
+        return ans;
+    }
+};
