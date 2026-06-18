@@ -1,0 +1,54 @@
+/*
+  Problem: Sudoku Solver
+  Link: https://leetcode.com/problems/sudoku-solver/
+
+  Approach:
+  - Optimal (implemented) — Backtracking cell by cell:
+      Recurse left to right, top to bottom.
+      Skip pre-filled cells.
+      For empty cells try digits '1'-'9':
+        - Validate against row, column, and 3x3 box
+        - Box start: row - row%3, col - col%3
+        - Place digit and recurse; if it returns true we're done
+        - Else reset cell (backtrack)
+      Return false if no digit works (triggers backtrack in caller).
+
+  Time: O(9^(empty cells))  Space: O(N^2) stack depth
+*/
+
+class Solution {
+public:
+    bool isValid(vector<vector<char>>& board, int row, int col, char d) {
+        for (int i = 0; i < board.size(); i++) {
+            if (board[row][i] == d) return false;
+            if (board[i][col] == d) return false;
+        }
+        int r = row - (row % 3);
+        int c = col - (col % 3);
+        for (int i = r; i < r + 3; i++)
+            for (int j = c; j < c + 3; j++)
+                if (board[i][j] == d) return false;
+        return true;
+    }
+
+    bool solve(vector<vector<char>>& board, int row, int col, int n) {
+        if (row == n) return true;
+
+        if (col == n) return solve(board, row + 1, 0, n);
+
+        if (board[row][col] != '.') return solve(board, row, col + 1, n);
+
+        for (char k = '1'; k <= '9'; k++) {
+            if (isValid(board, row, col, k)) {
+                board[row][col] = k;
+                if (solve(board, row, col + 1, n)) return true;
+                board[row][col] = '.';
+            }
+        }
+        return false;
+    }
+
+    void solveSudoku(vector<vector<char>>& board) {
+        solve(board, 0, 0, board.size());
+    }
+};
