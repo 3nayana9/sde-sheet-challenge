@@ -1,0 +1,55 @@
+/*
+  Problem: N-Queens
+  Link: https://leetcode.com/problems/n-queens/
+
+  Approach:
+  - Optimal (implemented) — Backtracking with O(1) safety check:
+      Place queens column by column.
+      For each row in current column, check safety using 3 boolean arrays:
+        r[row]             → row is free
+        ldiag[row+col]     → left diagonal is free
+        udiag[n-1+col-row] → upper diagonal is free
+      Mark all three, recurse to next column, unmark on backtrack.
+      Base: when col == n, all queens placed — push to ans.
+
+  Time: O(N!)  Space: O(N^2) for board + O(N) arrays
+*/
+
+class Solution {
+public:
+    void solve(vector<vector<string>>& ans, vector<string>& temp, int col, int n,
+               vector<bool>& r, vector<bool>& ldiag, vector<bool>& udiag) {
+
+        if (col == n) {
+            ans.push_back(temp);
+            return;
+        }
+        for (int row = 0; row < n; row++) {
+            if (r[row] && ldiag[row + col] && udiag[n - 1 + col - row]) {
+                temp[row][col] = 'Q';
+                r[row] = false;
+                ldiag[row + col] = false;
+                udiag[n - 1 + col - row] = false;
+
+                solve(ans, temp, col + 1, n, r, ldiag, udiag);
+
+                temp[row][col] = '.';
+                r[row] = true;
+                ldiag[row + col] = true;
+                udiag[n - 1 + col - row] = true;
+            }
+        }
+    }
+
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> ans;
+        if (n == 1) { ans.push_back({"Q"}); return ans; }
+        if (n < 4) return ans;
+
+        vector<string> temp(n, string(n, '.'));
+        vector<bool> r(n, true), ldiag(2 * n - 1, true), udiag(2 * n - 1, true);
+
+        solve(ans, temp, 0, n, r, ldiag, udiag);
+        return ans;
+    }
+};
