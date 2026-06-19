@@ -1,0 +1,38 @@
+/*
+  Problem: Word Break
+  Link: https://leetcode.com/problems/word-break/
+
+  Approach:
+  - Brute: Pure recursion — TLE for large inputs
+  - Optimal (implemented) — Recursion + Memoization:
+      At each index, try all substrings starting there.
+      If substring exists in dictionary, recurse from i+1.
+      Cache result in dp[idx] to avoid recomputation.
+      Base: if idx == s.size(), full string segmented — return true.
+
+  Time: O(N^2)  Space: O(N)
+*/
+
+class Solution {
+public:
+    bool isPossible(string& s, int idx, unordered_set<string>& dict, vector<int>& dp) {
+        if (idx == s.size()) return true;
+        if (dp[idx] != -1) return dp[idx];
+
+        string temp = "";
+        for (int i = idx; i < s.size(); i++) {
+            temp += s[i];
+            if (dict.count(temp)) {
+                if (isPossible(s, i + 1, dict, dp))
+                    return dp[idx] = true;
+            }
+        }
+        return dp[idx] = false;
+    }
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> dict(wordDict.begin(), wordDict.end());
+        vector<int> dp(s.size(), -1);
+        return isPossible(s, 0, dict, dp);
+    }
+};
