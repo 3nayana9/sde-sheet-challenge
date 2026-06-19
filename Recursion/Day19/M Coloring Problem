@@ -1,0 +1,48 @@
+/*
+  Problem: M Coloring Problem
+
+  Approach:
+  - Optimal (implemented) — Backtracking:
+      Build adjacency list from edges.
+      Assign colors node by node (0 to v-1).
+      For each node try all m colors; check no neighbor has same color.
+      If safe: assign color, recurse to next node.
+      If recursion returns true: done.
+      Else: reset color (backtrack).
+      Base: when node == v, all nodes colored successfully.
+
+  Time: O(M^V)  Space: O(V + E)
+*/
+
+class Solution {
+public:
+    bool isSafe(int node, int color, vector<int>& colors, vector<vector<int>>& graph) {
+        for (int nbr : graph[node]) {
+            if (colors[nbr] == color) return false;
+        }
+        return true;
+    }
+
+    bool solve(int node, vector<int>& colors, vector<vector<int>>& graph, int m, int v) {
+        if (node == v) return true;
+
+        for (int color = 0; color < m; color++) {
+            if (isSafe(node, color, colors, graph)) {
+                colors[node] = color;
+                if (solve(node + 1, colors, graph, m, v)) return true;
+                colors[node] = -1;
+            }
+        }
+        return false;
+    }
+
+    bool graphColoring(int v, vector<vector<int>>& edges, int m) {
+        vector<vector<int>> graph(v);
+        for (auto& e : edges) {
+            graph[e[0]].push_back(e[1]);
+            graph[e[1]].push_back(e[0]);
+        }
+        vector<int> colors(v, -1);
+        return solve(0, colors, graph, m, v);
+    }
+};
