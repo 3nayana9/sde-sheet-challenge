@@ -1,0 +1,59 @@
+/*
+  Problem: Rat in a Maze
+
+  Approach:
+  - Optimal (implemented) — Backtracking on grid:
+      Mark current cell as 0 (visited) before exploring.
+      Try all 4 directions: U, D, L, R (check bounds + cell value).
+      Add direction to path, recurse, pop on backtrack.
+      Reset cell to 1 after all directions explored (unvisit).
+      Base: when (row, col) == (n-1, n-1), push path to ans.
+      Sort ans at the end for lexicographic order.
+
+  Time: O(4^(N^2))  Space: O(N^2) stack depth
+*/
+
+class Solution {
+public:
+    void solve(vector<vector<int>>& grid, int n, int row, int col,
+               vector<string>& ans, string& path) {
+
+        if (row == n - 1 && col == n - 1) {
+            ans.push_back(path);
+            return;
+        }
+
+        grid[row][col] = 0;
+
+        if (row - 1 >= 0 && grid[row - 1][col]) {
+            path += 'U';
+            solve(grid, n, row - 1, col, ans, path);
+            path.pop_back();
+        }
+        if (row + 1 < n && grid[row + 1][col]) {
+            path += 'D';
+            solve(grid, n, row + 1, col, ans, path);
+            path.pop_back();
+        }
+        if (col - 1 >= 0 && grid[row][col - 1]) {
+            path += 'L';
+            solve(grid, n, row, col - 1, ans, path);
+            path.pop_back();
+        }
+        if (col + 1 < n && grid[row][col + 1]) {
+            path += 'R';
+            solve(grid, n, row, col + 1, ans, path);
+            path.pop_back();
+        }
+
+        grid[row][col] = 1;
+    }
+
+    vector<string> ratInMaze(vector<vector<int>>& maze) {
+        vector<string> ans;
+        string path = "";
+        solve(maze, maze.size(), 0, 0, ans, path);
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
