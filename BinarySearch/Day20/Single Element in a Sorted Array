@@ -1,0 +1,28 @@
+/*
+  Problem: Single Element in a Sorted Array
+  Link: https://leetcode.com/problems/single-element-in-a-sorted-array/
+
+  Approach:
+  - Brute: XOR all elements O(n)
+  - Optimal (implemented) — Binary Search on pair pattern:
+      In a sorted array with all duplicates, pairs are at (even, odd) indices.
+      Single element breaks this pattern.
+      Check: if nums[mid] == nums[mid ^ 1], single is to the right → low = mid + 1
+             else single is at mid or left → high = mid
+      mid ^ 1 flips the last bit: even→odd, odd→even (gives pair partner index).
+
+  Time: O(logN)  Space: O(1)
+*/
+
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        int low = 0, high = nums.size() - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == nums[mid ^ 1]) low = mid + 1;
+            else high = mid;
+        }
+        return nums[low];
+    }
+};
