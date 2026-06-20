@@ -1,0 +1,48 @@
+/*
+  Problem: Median of Row-Wise Sorted Matrix
+
+  Approach:
+  - Brute: Flatten and sort O(nm logn)
+  - Optimal (implemented) — Binary Search on value range:
+      Find global min and max across matrix.
+      For each mid count elements <= mid using upper bound on each sorted row.
+      Median is smallest value where count > (n*m)/2.
+      Binary search narrows down to exact median value.
+
+  Time: O(32 * n * logm)  Space: O(1)
+*/
+
+int upperBound(vector<int>& arr, int k) {
+    int low = 0, high = arr.size() - 1;
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        if (arr[mid] <= k) low = mid + 1;
+        else high = mid - 1;
+    }
+    return low;
+}
+
+int noOfElementsLessThanOrEqualX(vector<vector<int>>& mat, int mid) {
+    int cnt = 0;
+    for (int i = 0; i < mat.size(); i++) {
+        cnt += upperBound(mat[i], mid);
+    }
+    return cnt;
+}
+
+int medianOfRowWiseSortedMatrix(vector<vector<int>>& mat, int n, int m) {
+    int low = mat[0][0];
+    for (int i = 0; i < m; i++) low = min(mat[0][i], low);
+
+    int high = mat[n - 1][0];
+    for (int i = 0; i < m; i++) high = max(high, mat[n - 1][i]);
+
+    int cnt = (n * m) / 2;
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        if (noOfElementsLessThanOrEqualX(mat, mid) > cnt) high = mid - 1;
+        else low = mid + 1;
+    }
+    return low;
+}
