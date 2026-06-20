@@ -1,0 +1,36 @@
+/*
+  Problem: Nth Root of an Integer
+
+  Approach:
+  - Brute: Linear scan from 1 to M O(M)
+  - Optimal (implemented) — Binary Search on answer:
+      Search space [1, M]. For each mid compute mid^N.
+      Helper func returns:
+        1 → mid^N == M (found)
+        2 → mid^N > M (too large, exit early to avoid overflow)
+        0 → mid^N < M (too small)
+      Adjust low/high accordingly.
+
+  Time: O(N * logM)  Space: O(1)
+*/
+
+int func(int mid, int N, int M) {
+    long long ans = 1;
+    for (int i = 1; i <= N; i++) {
+        ans *= mid;
+        if (ans > M) return 2;
+    }
+    return (ans == M) ? 1 : 0;
+}
+
+int NthRootofM(int N, int M) {
+    int low = 1, high = M;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        int x = func(mid, N, M);
+        if (x == 1) return mid;
+        else if (x == 2) high = mid - 1;
+        else low = mid + 1;
+    }
+    return -1;
+}
