@@ -1,0 +1,46 @@
+/*
+  Problem: Allocate Minimum Number of Pages (Book Allocation)
+
+  Approach:
+  - Brute: Try all possible max page values
+  - Optimal (implemented) — Binary Search on answer:
+      Search space: [max(arr), sum(arr)]
+      For each mid, greedily check if books can be split among 'people'
+      students such that no student reads more than mid pages.
+      If yes, try smaller (high = mid-1). Else try larger (low = mid+1).
+      Answer = low after binary search ends.
+      Edge case: if n < people, return -1.
+
+  Time: O(N * log(sum-max))  Space: O(1)
+*/
+
+class Solution {
+public:
+    bool canWeAllocate(vector<int>& arr, int mid, int people) {
+        int students = 1, pages = 0;
+        for (int i = 0; i < arr.size(); i++) {
+            if (pages + arr[i] > mid) {
+                students++;
+                pages = arr[i];
+            } else {
+                pages += arr[i];
+            }
+        }
+        return students <= people;
+    }
+
+    int findPages(vector<int>& arr, int people) {
+        int n = arr.size();
+        if (n < people) return -1;
+
+        int low  = *max_element(arr.begin(), arr.end());
+        int high = accumulate(arr.begin(), arr.end(), 0);
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (canWeAllocate(arr, mid, people)) high = mid - 1;
+            else low = mid + 1;
+        }
+        return low;
+    }
+};
