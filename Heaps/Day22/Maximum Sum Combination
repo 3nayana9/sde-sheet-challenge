@@ -1,0 +1,44 @@
+/*
+  Problem: Maximum Sum Combination
+  Given two arrays a[] and b[], find k pairs (one from each) with maximum sums.
+
+  Approach:
+  - Brute: Generate all N^2 sums, sort, return top k — O(N^2 logN)
+  - Optimal (implemented) — Max Heap + Visited Set:
+      Sort both arrays descending.
+      Start with pair (0,0) — guaranteed max sum.
+      Use max heap of (sum, i, j) and a visited set to avoid duplicates.
+      At each step: pop max, push (i+1,j) and (i,j+1) if not visited.
+      Repeat k times.
+
+  Time: O(N logN + K logK)  Space: O(K)
+*/
+
+vector<int> maxSumCombination(vector<int>& a, vector<int>& b, int k) {
+    sort(a.begin(), a.end(), greater<int>());
+    sort(b.begin(), b.end(), greater<int>());
+
+    priority_queue<tuple<int, int, int>> pq;
+    set<pair<int, int>> visited;
+    vector<int> ans;
+
+    int n = a.size();
+    pq.push({a[0] + b[0], 0, 0});
+    visited.insert({0, 0});
+
+    while (k-- && !pq.empty()) {
+        auto [sum, i, j] = pq.top();
+        pq.pop();
+        ans.push_back(sum);
+
+        if (i + 1 < n && !visited.count({i + 1, j})) {
+            pq.push({a[i + 1] + b[j], i + 1, j});
+            visited.insert({i + 1, j});
+        }
+        if (j + 1 < n && !visited.count({i, j + 1})) {
+            pq.push({a[i] + b[j + 1], i, j + 1});
+            visited.insert({i, j + 1});
+        }
+    }
+    return ans;
+}
