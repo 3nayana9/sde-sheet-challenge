@@ -1,0 +1,50 @@
+/*
+  Problem: Implement Max Heap from Scratch
+
+  Operations:
+  - push(x): Add to end, bubble up by comparing with parent (idx-1)/2
+  - pop():   Replace root with last element, sift down comparing with
+             left child (2*idx+1) and right child (2*idx+2)
+  - peek():  Return root (max element)
+  - size():  Return heap size
+
+  Time: O(logN) for push/pop  Space: O(N)
+*/
+
+class maxHeap {
+private:
+    vector<int> heap;
+
+public:
+    void push(int x) {
+        heap.push_back(x);
+        int idx = heap.size() - 1;
+        while (idx > 0) {
+            int parent = (idx - 1) / 2;
+            if (heap[parent] < heap[idx]) {
+                swap(heap[parent], heap[idx]);
+                idx = parent;
+            } else break;
+        }
+    }
+
+    void pop() {
+        if (heap.empty()) return;
+        heap[0] = heap.back();
+        heap.pop_back();
+        int idx = 0, n = heap.size();
+        while (true) {
+            int left = 2 * idx + 1;
+            int right = 2 * idx + 2;
+            int largest = idx;
+            if (left  < n && heap[left]  > heap[largest]) largest = left;
+            if (right < n && heap[right] > heap[largest]) largest = right;
+            if (largest == idx) break;
+            swap(heap[idx], heap[largest]);
+            idx = largest;
+        }
+    }
+
+    int peek() { return heap.empty() ? -1 : heap[0]; }
+    int size() { return heap.size(); }
+};
