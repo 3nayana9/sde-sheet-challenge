@@ -1,0 +1,26 @@
+/*
+  Problem: Kth Largest Element in an Array
+  Link: https://leetcode.com/problems/kth-largest-element-in-an-array/
+
+  Approach:
+  - Brute: Sort descending, return k-1 index O(N logN)
+  - Optimal (implemented) — Min Heap of size k:
+      Maintain a min heap of size k.
+      For each element: push it; if size > k, pop the minimum.
+      After traversal, heap top is the kth largest.
+      Why: heap always holds the k largest elements seen so far.
+
+  Time: O(N logK)  Space: O(K)
+*/
+
+class Solution {
+public:
+    int KthLargest(vector<int>& arr, int k) {
+        priority_queue<int, vector<int>, greater<int>> pq;
+        for (int x : arr) {
+            pq.push(x);
+            if (pq.size() > k) pq.pop();
+        }
+        return pq.top();
+    }
+};
