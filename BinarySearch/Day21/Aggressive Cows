@@ -1,0 +1,39 @@
+/*
+  Problem: Aggressive Cows
+
+  Approach:
+  - Brute: Try all possible minimum distances
+  - Optimal (implemented) — Binary Search on answer:
+      Sort stalls. Search space: [1, max-min].
+      For each mid (minimum distance), greedily place cows:
+        Place first cow at arr[0], place next cow only when
+        distance from last placed cow >= mid.
+      If all cows placed → feasible, try larger distance (low = mid+1).
+      Else try smaller (high = mid-1).
+      Answer = high after binary search ends (last feasible value).
+
+  Time: O(N logN + N log(max-min))  Space: O(1)
+*/
+
+bool canWePlace(vector<int>& arr, int mid, int cows) {
+    int c = 1, coord = arr[0];
+    for (int i = 1; i < arr.size(); i++) {
+        if (arr[i] - coord >= mid) {
+            coord = arr[i];
+            c++;
+        }
+    }
+    return c >= cows;
+}
+
+int AggressiveCows(vector<int>& arr, int cows) {
+    sort(arr.begin(), arr.end());
+    int low = 1, high = arr.back() - arr.front();
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (canWePlace(arr, mid, cows)) low = mid + 1;
+        else high = mid - 1;
+    }
+    return high;
+}
